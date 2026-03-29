@@ -25,11 +25,14 @@ async def save_posts(
     new_rows = [
         RedditPostDB(
             reddit_id=post.id,
+            subreddit=post.subreddit,
             title=post.title,
-            score=post.score,
+            post_body=post.post_body,
+            upvotes=post.upvotes,
             num_comments=post.num_comments,
             url=post.url,
             created_utc=post.created_utc,
+            analysis_status="pending",
         )
         for post in posts
         if post.id not in existing_ids

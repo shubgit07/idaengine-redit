@@ -25,27 +25,21 @@ async def list_pain_points(session: AsyncSession = Depends(get_session)) -> list
         PainPoint(
             id=pain_point.id,
             reddit_id=pain_point.reddit_id,
-            subreddit=_extract_subreddit(post.url),
+            subreddit=post.subreddit,
             post_title=post.title,
             post_url=post.url,
             pain_point=pain_point.pain_point,
+            pain_point_headline=pain_point.pain_point_headline,
             category=pain_point.category,
             severity=pain_point.severity,
+            emotional_intensity=pain_point.emotional_intensity,
+            willingness_to_pay=pain_point.willingness_to_pay,
+            confidence=pain_point.confidence,
+            engagement_score=pain_point.engagement_score,
             score=pain_point.score,
+            score_version=pain_point.score_version,
+            score_reason=pain_point.score_reason,
             created_at=pain_point.created_at,
         )
         for pain_point, post in rows
     ]
-
-
-def _extract_subreddit(url: str) -> str:
-    marker = "/r/"
-    if marker not in url:
-        return "r/unknown"
-
-    tail = url.split(marker, maxsplit=1)[1]
-    subreddit_name = tail.split("/", maxsplit=1)[0].strip()
-    if not subreddit_name:
-        return "r/unknown"
-
-    return f"r/{subreddit_name}"

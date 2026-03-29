@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(249, 148, 74, 0.45) rgba(255, 255, 255, 0.05);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(249, 148, 74, 0.38);
+  border-radius: 99px;
+}
+
+body {
+  @apply min-h-screen bg-surface-950 text-slate-100 antialiased;
+}
+
+.page-shell {
+  @apply relative mx-auto min-h-screen w-full max-w-[1280px] px-4 pb-10 pt-6 sm:px-6 lg:px-10;
+}
+
+.section-title {
+  @apply text-lg font-semibold tracking-tight text-slate-100 sm:text-xl;
+}
+
+.section-caption {
+  @apply mt-2 text-sm text-slate-400;
+}
