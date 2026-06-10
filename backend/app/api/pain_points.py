@@ -8,6 +8,7 @@ from app.db.session import get_session
 from app.models.pain_point import PainPointDB
 from app.models.reddit_post import RedditPostDB
 from app.schemas.pain_point import PainPoint
+from app.services.category_service import normalize_category
 
 router = APIRouter()
 
@@ -30,7 +31,12 @@ async def list_pain_points(session: AsyncSession = Depends(get_session)) -> list
             post_url=post.url,
             pain_point=pain_point.pain_point,
             pain_point_headline=pain_point.pain_point_headline,
-            category=pain_point.category,
+            category=normalize_category(
+                pain_point.category,
+                pain_point=pain_point.pain_point,
+                headline=pain_point.pain_point_headline,
+                context_text=f"{post.title} {post.subreddit}",
+            ),
             severity=pain_point.severity,
             emotional_intensity=pain_point.emotional_intensity,
             willingness_to_pay=pain_point.willingness_to_pay,

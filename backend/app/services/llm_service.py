@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 
 from app.core.retry import async_retry
 from app.schemas.reddit import RedditPost
+from app.services.category_service import normalize_category
 from app.services.chunking_service import chunk_text
 from app.services.scoring_service import compute_engagement_score, compute_final_score
 
@@ -135,6 +136,7 @@ def _build_user_prompt(title: str, text_chunk: str) -> str:
         "  {\n"
         '    "pain_point": "...",\n'
         '    "headline": "...",\n'
+        '    "category": "acquisition|activation|retention|pricing|support|operations|product|technical|compliance|marketplace|finance|general",\n'
         '    "severity": "low|medium|high",\n'
         '    "confidence": 0-1,\n'
         '    "willingness_to_pay": 0-1,\n'
@@ -219,6 +221,11 @@ def _normalize_candidate(item: dict[str, Any]) -> dict[str, Any] | None:
     return {
         "pain_point": pain_point.strip(),
         "headline": headline.strip(),
+        "category": normalize_category(
+            item.get("category"),
+            pain_point=pain_point,
+            headline=headline,
+        ),
         "severity": _normalize_severity(item.get("severity")),
         "confidence": _to_unit_interval(item.get("confidence"), default=0.0),
         "willingness_to_pay": _to_unit_interval(item.get("willingness_to_pay"), default=0.0),
@@ -344,7 +351,7 @@ async def analyze_post(post: RedditPost) -> list[dict[str, Any]]:
                 "reddit_id": post.id,
                 "pain_point": item["pain_point"],
                 "pain_point_headline": item["headline"],
-                "category": "general",
+                "category": item["category"],
                 "severity": severity,
                 "emotional_intensity": emotional_intensity,
                 "willingness_to_pay": willingness_to_pay,
